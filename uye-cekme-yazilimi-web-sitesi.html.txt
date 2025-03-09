@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MemberBoost - Üye Çekme Yazılımı</title>
+    <style>
+        :root {
+            --primary: #1E6FD9;
+            --primary-dark: #1255AC;
+            --secondary: #FF6B35;
+            --gray-light: #F5F7FA;
+            --gray: #E1E7EF;
+            --gray-dark: #7A8899;
+            --text: #2D3748;
+            --white: #FFFFFF;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            color: var(--text);
+            line-height: 1.6;
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        /* Header Styles */
+        header {
+            background-color: var(--white);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
+            z-index: 1000;
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .logo span {
+            color: var(--secondary);
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 2rem;
+        }
+        
+        nav ul li a {
+            text-decoration: none;
+            color: var(--text);
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        nav ul li a:hover {
+            color: var(--primary);
+        }
+        
+        .cta-button {
+            background-color: var(--primary);
+            color: var(--white);
+            border: none;
+            padding: 0.5rem 1.5rem;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .cta-button:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: var(--white);
+            padding: 8rem 0 4rem;
+            text-align: center;
+        }
+        
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+        }
+        
+        .hero-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+        
+        .secondary-button {
+            background-color: var(--white);
+            color: var(--primary);
+            border: none;
+            padding: 0.5rem 1.5rem;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        
+        .secondary-button:hover {
+            background-color: var(--gray-light);
+        }
+        
+        /* Features Section */
+        .features {
+            padding: 4rem 0;
+            background-color: var(--white);
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .section-header h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .feature-card {
+            background-color: var(--gray-light);
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .feature-icon {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+        
+        .feature-card h3 {
+            margin-bottom: 1rem;
+        }
+        
+        /* Testimonials Section */
+        .testimonials {
+            padding: 4rem 0;
+            background-color: var(--gray-light);
+        }
+        
+        .testimonial-slider {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .testimonial {
+            background-color: var(--white);
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .testimonial-text {
+            font-style: italic;
+            margin-bottom: 1rem;
+        }
+        
+        .testimonial-author {
+            font-weight: 600;
+            color: var(--primary);
+        }
+        
+        /* FAQ Section */
+        .faq {
+            padding: 4rem 0;
+            background-color: var(--white);
+        }
+        
+        .faq-item {
+            margin-bottom: 1rem;
+            border-bottom: 1px solid var(--gray);
+            padding-bottom: 1rem;
+        }
+        
+        .faq-question {
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .faq-answer {
+            margin-top: 1rem;
+            display: none;
+        }
+        
+        .faq-answer.active {
+            display: block;
+        }
+        
+        /* Pricing Section */
+        .pricing {
+            padding: 4rem 0;
+            background-color: var(--gray-light);
+        }
+        
+        .pricing-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .pricing-card {
+            background-color: var(--white);
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+        
+        .pricing-card:hover {
+            transform: scale(1.03);
+        }
+        
+        .pricing-card.featured {
+            border: 2px solid var(--primary);
+            position: relative;
+        }
+        
+        .pricing-card.featured::after {
+            content: "En Popüler";
+            position: absolute;
+            top: -12px;
+            right: 20px;
+            background-color: var(--secondary);
+            color: var(--white);
+            padding: 0.25rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .pricing-period {
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .pricing-price {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        
+        .pricing-price span {
+            font-size: 1rem;
+            font-weight: 400;
+            color: var(--gray-dark);
+        }
+        
+        .pricing-features {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+        
+        .pricing-features li {
+            margin-bottom: 0.5rem;
+            color: var(--text);
+        }
+        
+        /* Contact Section */
+        .contact {
+            padding: 4rem 0;
+            background-color: var(--white);
+        }
+        
+        .contact-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .contact-info h3 {
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+        
+        .contact-details {
+            margin-bottom: 2rem;
+        }
+        
+        .contact-details p {
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .contact-icon {
+            color: var(--primary);
+            margin-right: 0.5rem;
+        }
+        
+        .contact-form input,
+        .contact-form textarea {
+            width: 100%;
+            padding: 0.8rem;
+            margin-bottom: 1rem;
+            border: 1px solid var(--gray);
+            border-radius: 4px;
+        }
+        
+        .contact-form textarea {
+            min-height: 150px;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--primary-dark);
+            color: var(--white);
+            padding: 3rem 0;
+        }
+        
+        .footer-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+        
+        .footer-logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        
+        .footer-links h4 {
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+        
+        .footer-links ul {
+            list-style: none;
+        }
+        
+        .footer-links ul li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .footer-links ul li a {
+            color: var(--gray-light);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-links ul li a:hover {
+            color: var(--white);
+            text-decoration: underline;
+        }
+        
+        .footer-newsletter input {
+            padding: 0.8rem;
+            width: 100%;
+            border: none;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+        }
+        
+        .social-icons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .social-icon {
+            color: var(--white);
+            font-size: 1.5rem;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            margin-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                padding: 1rem;
+            }
+            
+            nav ul {
+                margin-top: 1rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            nav ul li {
+                margin: 0.5rem;
+            }
+            
+            .hero {
+                padding: 6rem 0 3rem;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .hero-buttons button {
+                width: 80%;
+                margin-bottom: 0.5rem;
+            }
+        }
+        
+        /* Helper Classes */
+        .text-center {
+            text-align: center;
+        }
+        
+        .mb-1 {
+            margin-bottom: 1rem;
+        }
+        
+        .mb-2 {
+            margin-bottom: 2rem;
+        }
+        
+        .mt-1 {
+            margin-top: 1rem;
+        }
+        
+        .mt-2 {
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-container">
+            <div class="logo">Member<span>Boost</span></div>
+            <nav>
+                <ul>
+                    <li><a href="#home">Ana Sayfa</a></li>
+                    <li><a href="#features">Özellikler</a></li>
+                    <li><a href="#pricing">Fiyatlandırma</a></li>
+                    <li><a href="#blog">Blog</a></li>
+                    <li><a href="#contact">İletişim</a></li>
+                </ul>
+            </nav>
+            <button class="cta-button">Ücretsiz Demo</button>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="container">
+            <h1>Üye Çekme Yazılımı ile Müşteri Kitlenizi Genişletin</h1>
+            <p>Otomatik araçlar, detaylı analizler ve güçlü entegrasyonlarla hedef kitlenize daha hızlı ve etkili bir şekilde ulaşın.</p>
+            <div class="hero-buttons">
+                <button class="cta-button">Hemen Dene</button>
+                <button class="secondary-button">Daha Fazla Bilgi</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features">
+        <div class="container">
+            <div class="section-header">
+                <h2>Üstün Özellikler</h2>
+                <p>MemberBoost ile hedeflerinize daha hızlı ulaşın</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Otomatik Üye Çekme</h3>
+                    <p>Hedef kitle tanımlaması yapın ve yazılımımız otomatik olarak potansiyel üyeleri belirlesin.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Detaylı Analitik</h3>
+                    <p>Kullanıcı davranışlarını analiz edin ve stratejinizi buna göre şekillendirin.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔄</div>
+                    <h3>Entegrasyon</h3>
+                    <p>Popüler CRM ve pazarlama araçlarıyla sorunsuz entegrasyon sağlayın.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📱</div>
+                    <h3>Çoklu Platform</h3>
+                    <p>Sosyal medya platformlarında ve web sitelerinde aynı anda faaliyet gösterin.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔒</div>
+                    <h3>Güvenli ve Uyumlu</h3>
+                    <p>KVKK ve GDPR uyumlu, verilerinizi güvende tutan yapı.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🤖</div>
+                    <h3>Yapay Zeka Desteği</h3>
+                    <p>Yapay zeka algoritmaları ile hedef kitleyi daha doğru belirleyin.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials">
+        <div class="container">
+            <div class="section-header">
+                <h2>Müşteri Deneyimleri</h2>
+                <p>Yazılımımızı kullanan müşterilerimizin yorumları</p>
+            </div>
+            <div class="testimonial-slider">
+                <div class="testimonial">
+                    <p class="testimonial-text">"MemberBoost sayesinde sosyal medya takipçi sayımızı 3 ayda %60 artırdık. Kullanımı çok kolay ve müşteri desteği harika."</p>
+                    <p class="testimonial-author">Ahmet Yılmaz, Dijital Pazarlama Uzmanı</p>
+                </div>
+                <!-- Diğer testimonialler slider içinde yer alacak -->
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq">
+        <div class="container">
+            <div class="section-header">
+                <h2>Sıkça Sorulan Sorular</h2>
+                <p>Merak ettiklerinize hızlı cevaplar</p>
+            </div>
+            <div class="faq-items">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <p>Yazılımı kullanmak için teknik bilgi gerekiyor mu?</p>
+                        <span>+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Hayır, MemberBoost kullanıcı dostu bir arayüze sahiptir ve teknik bilgi gerektirmez. Detaylı kullanım kılavuzumuz ve video eğitimlerimiz ile kolayca başlayabilirsiniz.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <p>Hangi platformlarda çalışabilirim?</p>
+                        <span>+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>MemberBoost; Instagram, Facebook, Twitter, LinkedIn ve YouTube gibi popüler sosyal medya platformlarında çalışır. Ayrıca web siteniz için de entegrasyonlar sağlar.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <p>Aboneliğimi istediğim zaman iptal edebilir miyim?</p>
+                        <span>+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Evet, aboneliğinizi istediğiniz zaman iptal edebilirsiniz. İptal işlemi için hesap ayarlarınızdan abonelik bölümüne gidebilir veya müşteri hizmetlerimizle iletişime geçebilirsiniz.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <p>Yazılımın kullanımı yasal mı?</p>
+                        <span>+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Evet, MemberBoost tüm platformların kullanım koşullarına uygun olarak tasarlanmıştır. Spam veya etik olmayan yöntemler kullanmaz ve KVKK ile GDPR gibi veri koruma düzenlemelerine tam uyumludur.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="pricing">
+        <div class="container">
+            <div class="section-header">
+                <h2>Fiyatlandırma</h2>
+                <p>İhtiyacınıza uygun planı seçin</p>
+            </div>
+            <div class="pricing-cards">
+                <div class="pricing-card">
+                    <div class="pricing-period">Aylık Plan</div>
+                    <div class="pricing-price">₺499<span>/ay</span></div>
+                    <ul class="pricing-features">
+                        <li>1000 üye hedefleme</li>
+                        <li>Temel analiz raporları</li>
+                        <li>2 platform entegrasyonu</li>
+                        <li>E-posta desteği</li>
+                        <li>Haftada 3 otomatik kampanya</li>
+                    </ul>
+                    <button class="cta-button">Satın Al</button>
+                </div>
+                <div class="pricing-card featured">
+                    <div class="pricing-period">3 Aylık Plan</div>
+                    <div class="pricing-price">₺399<span>/ay</span></div>
+                    <ul class="pricing-features">
+                        <li>5000 üye hedefleme</li>
+                        <li>Gelişmiş analiz raporları</li>
+                        <li>5 platform entegrasyonu</li>
+                        <li>Öncelikli e-posta desteği</li>
+                        <li>Sınırsız otomatik kampanya</li>
+                        <li>API erişimi</li>
+                    </ul>
+                    <button class="cta-button">Satın Al</button>
+                </div>
+                <div class="pricing-card">
+                    <div class="pricing-period">6 Aylık Plan</div>
+                    <div class="pricing-price">₺349<span>/ay</span></div>
+                    <ul class="pricing-features">
+                        <li>Sınırsız üye hedefleme</li>
+                        <li>Gelişmiş analiz raporları</li>
+                        <li>Tüm platformlarda entegrasyon</li>
+                        <li>7/24 öncelikli destek</li>
+                        <li>Sınırsız otomatik kampanya</li>
+                        <li>API erişimi</li>
+                        <li>Özel danışmanlık</li>
+                    </ul>
+                    <button class="cta-button">Satın Al</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <div class="section-header">
+                <h2>Bize Ulaşın</h2>
+                <p>Sorularınız için bizimle iletişime geçin</p>
+            </div>
+            <div class="contact-container">
+                <div class="contact-info">
+                    <h3>İletişim Bilgilerimiz</h3>
+                    <div class="contact-details">
+                        <p><span class="contact-icon">📍</span> İstanbul, Maslak, Büyükdere Cad. No:123</p>
+                        <p><span class="contact-icon">📞</span> +90 212 123 45 67</p>
+                        <p><span class="contact-icon">✉️</span> info@memberboost.com</p>
+                    </div>
+                    <div class="contact-map">
+                        <!-- Burada harita entegrasyonu olacak -->
+                        <div style="background-color: var(--gray); height: 200px; display: flex; justify-content: center; align-items: center;">
+                            <p>Harita Görünümü</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="contact-form">
+                    <h3>Mesaj Gönderin</h3>
+                    <form>
+                        <input type="text" placeholder="Adınız Soyadınız" required>
+                        <input type="email" placeholder="E-posta Adresiniz" required>
+                        <input type="text" placeholder="Konu">
+                        <textarea placeholder="Mesajınız" required></textarea>
+                        <button type="submit" class="cta-button">Gönder</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-container">
+                <div class="footer-about">
+                    <div class="footer-logo">MemberBoost</div>
+                    <p>Üye çekme ve sosyal medya büyütme konusunda lider yazılım çözümü.</p>
+                    <div class="social-icons">
+                        <a href="#" class="social-icon">f</a>
+                        <a href="#" class="social-icon">t</a>
+                        <a href="#" class="social-icon">in</a>
+                        <a href="#" class="social-icon">ig</a>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <h4>Hızlı Erişim</h4>
+                    <ul>
+                        <li><a href="#home">Ana Sayfa</a></li>
+                        <li><a href="#features">Özellikler</a></li>
+                        <li><a href="#pricing">Fiyatlandırma</a></li>
+                        <li><a href="#blog">Blog</a></li>
+                        <li><a href="#contact">İletişim</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Bilgi</h4>
+                    <ul>
+                        <li><a href="#">Hakkımızda</a></li>
+                        <li><a href="#">Gizlilik Politikası</a></li>
+                        <li><a href="#">Kullanım Koşulları</a></li>
+                        <li><a href="#">SSS</a></li>
+                        <li><a href="#">Yardım</a></li>
+                    </ul>
+                </div>
+                <div class="footer-newsletter">
+                    <h4>Bültene Abone Olun</h4>
+                    <p>En son güncellemeler ve kampanyalardan haberdar olun.</p>
+                    <form>
+                        <input type="email" placeholder="E-posta Adresiniz">
+                        <button type="submit" class="cta-button">Abone Ol</button>
+                    </form>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2025 MemberBoost. Tüm hakları saklıdır.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // FAQ Toggle
+        const faqQuestions = document.querySelectorAll('.faq-question');
+        
+        faqQuestions.forEach(question => {
+            question.addEventListener('click', () => {
+                const answer = question.nextElementSibling;
+                const isActive = answer.classList.contains('active');
+                
+                // Close all answers
+                document.querySelectorAll('.faq-answer').forEach(ans => {
+                    ans.classList.remove('active');
+                });
+                
+                document.querySelectorAll('.faq-question span').forEach(span => {
+                    span.textContent = '+';
+                });
+                
+                // Open current answer if it was not active
+                if (!isActive) {
+                    answer.classList.add('active');
+                    question.querySelector('span').textContent = '-';
+                }
+            });
+        });
+        
+        // Sticky Header
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            header.classList.toggle('sticky', window.scrollY > 0);
+        });
+        
+        // Smooth Scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const target = document.querySelector(this.getAttribute('href'));
+                
+                if (target) {
+                    window.scrollTo({
+                        top: target.offsetTop - 70,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
